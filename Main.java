@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
+//class for person as that many people can park in lot
 class Person{
     Person(String name,Vehicle v,Boolean x){
         this.name = name;
@@ -13,6 +14,7 @@ class Person{
     public Boolean Handicapped;
 
 }
+//parking attendant takes care of allocating spot for vehicles
 class Parking_Attendant{
     private String name;
 
@@ -41,6 +43,7 @@ class Parking_Attendant{
         System.out.println("Have a safe ride");
     }
 }
+//money for maintaining the different modes of payment
 class Money{
     private int money;
     private String mode_of_payement;
@@ -56,6 +59,7 @@ class Money{
     }
 
 }
+//Ticket to be given to the Person when he enters the parking lot
 class Ticket{
     private Person p;
     private Vehicle v;
@@ -90,6 +94,7 @@ class Ticket{
     }
 
 }
+//Parking lot
 class Parking_lot {
     private String name;
     private String area;
@@ -107,7 +112,7 @@ class Parking_lot {
         System.out.println("city: " + this.city);
     }
 }
-
+//Parking floor which takes care of diff types of spots,no of empty spots of diff types of spot,entering the floor,exiting the floor etc.
 class Parking_floor {
     private int floor_no;
     private int capacity_of_vehicles;
@@ -185,7 +190,7 @@ class Parking_floor {
         System.out.println("Bike Spots: " + (capacity_of_vehicles / 4 - Bike_Spot));
     }
 }
-
+//abstract class for parking spot as their are many types of parking spots,it take care of vehicle type,Person has any disability,parking the vehicle,removing the vehicle etc.
 abstract class Parking_Spot {
     private String type_of_parking_spot;
     protected int Spot_number;
@@ -196,6 +201,7 @@ abstract class Parking_Spot {
     abstract void set_EV(Vehicle v);
 
 }
+//compact spots created for purpose of van and car
 class Compact_Spot extends Parking_Spot{
     void assign_spot_to_vehicle(Vehicle v,Person p){
         if(v.Vehicle_type.equals("van") || v.Vehicle_type.equals("car") ){
@@ -211,6 +217,7 @@ class Compact_Spot extends Parking_Spot{
         Is_spot_free = false;
     }
 }
+//Large spots created for purpose of Truck
 class Large_Spot extends Parking_Spot {
     void assign_spot_to_vehicle(Vehicle v,Person p) {
         if (v.Vehicle_type.equals("Truck")) {
@@ -227,6 +234,7 @@ class Large_Spot extends Parking_Spot {
         Is_spot_free = false;
     }
 }
+//Seperate Parking Spot for Handicapped person
 class Handicapped_Spot extends Parking_Spot {
     void assign_spot_to_vehicle(Vehicle v,Person p) {
         if (p.Handicapped) {
@@ -243,6 +251,7 @@ class Handicapped_Spot extends Parking_Spot {
         Is_spot_free = false;
     }
 }
+//Bike Spot for Bikes
 class Bike_Spot extends Parking_Spot {
     void assign_spot_to_vehicle(Vehicle v,Person p) {
         if (v.Vehicle_type.equals("Bike")) {
@@ -259,7 +268,7 @@ class Bike_Spot extends Parking_Spot {
         Is_spot_free = false;
     }
 }
-
+//Vehicle class take care vehicle type,Vehicle_fuel,Vehicle-no
 class Vehicle {
     public String Vehicle_type;
     public String Vehicle_fuel; //EV or Normal vehicle
@@ -280,7 +289,7 @@ class Vehicle {
     }
 
 }
-
+//Diff types of Vehicle like car,Truck,Van,Bike are allowed in Parking lot.
 class Car extends Vehicle {
     Car(String p) {
         super(p);
@@ -301,6 +310,7 @@ class Bike extends Vehicle {
         super(p);
     }
 }
+//Main function where we can test the basic mode of parking spot
 public class Main{
     public static void main(String[] args){
       Parking_lot p1 = new Parking_lot("Xeno_lot","RajNagar","Hubli");
