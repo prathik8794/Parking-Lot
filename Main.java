@@ -13,6 +13,34 @@ class Person{
     public Boolean Handicapped;
 
 }
+class Parking_Attendant{
+    private String name;
+
+    Parking_Attendant(String name){
+        this.name = name;
+    }
+    void Welcome(){
+        System.out.println("Welcome to the lot");
+    }
+    void find_the_spot(Parking_floor f1,Vehicle v){
+        if(v.Vehicle_type.equals("car")){
+            if(!f1.bike_capacity_is_full()){
+                System.out.println("You can park in the floor no: "+f1.get_floor_no());
+            }
+        }
+        else if(v.Vehicle_type.equals("bike")){
+            if(!f1.bike_capacity_is_full()){
+                System.out.println("You can park in the floor no: " + f1.get_floor_no());
+            }
+        }
+        else{
+            System.out.println("No spots");
+        }
+    }
+    void dept_msg(){
+        System.out.println("Have a safe ride");
+    }
+}
 class Money{
     private int money;
     private String mode_of_payement;
@@ -22,6 +50,9 @@ class Money{
     }
     int get_money(){
       return this.money;  
+    }
+    void pay_money(int money){
+        System.out.println("Payed Rs: "+money);
     }
 
 }
@@ -63,20 +94,14 @@ class Parking_lot {
     private String name;
     private String area;
     private String city;
-
-    void set_name_of_lot(String name) {
+    Parking_lot(String name, String area, String city){
         this.name = name;
-    }
-
-    void set_name_of_area(String area) {
         this.area = area;
-    }
-
-    void set_name_of_city(String city) {
         this.city = city;
     }
 
-    void details_of_lot() {
+    void Welcome_To_Lot() {
+        System.out.println("Welcome to the Amazing Parking lot");
         System.out.println("Name of Parking Lot: " + this.name);
         System.out.println("area: " + this.area);
         System.out.println("city: " + this.city);
@@ -87,18 +112,32 @@ class Parking_floor {
     private int floor_no;
     private int capacity_of_vehicles;
     private int vehicle_count = 0;
+    private int Compact_Spot = 0;
+    private int Large_Spot = 0;
+    private int Handicapped_Spot = 0;
+    private int Bike_Spot = 0;
+
+
 
     void set_floor_no(int floor_no){
         this.floor_no = floor_no;
+    }
+    
+    int get_floor_no() {
+        return floor_no;
     }
 
     void set_capacity(int cap) {
         this.capacity_of_vehicles = cap;
     }
 
-    void enter_the_floor() {
+    void enter_the_floor(Vehicle v,Person p) {
         System.out.println("Enter the vehicle to the floor " + this.floor_no);
         vehicle_count++;
+        if(v.Vehicle_type.equals("van") || v.Vehicle_type.equals("car"))Compact_Spot++;
+        else if(v.Vehicle_type.equals("Truck"))Large_Spot++;
+        else if(p.Handicapped==true)Handicapped_Spot++;
+        else Bike_Spot++;
     }
 
     void exit_the_floor() {
@@ -113,10 +152,37 @@ class Parking_floor {
             return true;
         return false;
     }
+    boolean compact_capacity_is_full() {
+        if (Compact_Spot == capacity_of_vehicles/4)
+            return true;
+        return false;
+    }
+    
+    boolean large_capacity_is_full() {
+        if (Large_Spot == capacity_of_vehicles / 4)
+            return true;
+        return false;
+    }
+    
+    boolean handicapped_capacity_is_full() {
+        if (Handicapped_Spot == capacity_of_vehicles / 4)
+            return true;
+        return false;
+    }
+    
+    boolean bike_capacity_is_full() {
+        if (Bike_Spot== capacity_of_vehicles / 4)
+            return true;
+        return false;
+    }
 
     void Display_board() {
         System.out.println("Floor No: " + this.floor_no);
         System.out.println("Empty Spots: " + (this.capacity_of_vehicles - this.vehicle_count));
+        System.out.println("Compact Spots: "+(capacity_of_vehicles/4 - Compact_Spot));
+        System.out.println("Large Spots: " + (capacity_of_vehicles / 4 - Large_Spot));
+        System.out.println("Handicapped Spots: " + (capacity_of_vehicles / 4 - Handicapped_Spot));
+        System.out.println("Bike Spots: " + (capacity_of_vehicles / 4 - Bike_Spot));
     }
 }
 
@@ -128,6 +194,7 @@ abstract class Parking_Spot {
     abstract void assign_spot_to_vehicle(Vehicle v,Person p);
     abstract void remove_vehicle_from_spot();
     abstract void set_EV(Vehicle v);
+
 }
 class Compact_Spot extends Parking_Spot{
     void assign_spot_to_vehicle(Vehicle v,Person p){
@@ -201,11 +268,13 @@ class Vehicle {
     Vehicle(String p) {
         this.Vehicle_type = p;
     }
-
+    
     public void set_vehicle_no(String Vehicle_no) {
         this.Vehicle_no = Vehicle_no;
     }
-
+    void set_vehicle_fuel(String Vehicle_fuel){
+        this.Vehicle_fuel = Vehicle_fuel;
+    }
     public void get_vehicle_type() {
         System.out.println(Vehicle_type);
     }
@@ -234,7 +303,54 @@ class Bike extends Vehicle {
 }
 public class Main{
     public static void main(String[] args){
+      Parking_lot p1 = new Parking_lot("Xeno_lot","RajNagar","Hubli");
+      p1.Welcome_To_Lot();
+      Parking_floor f1 = new Parking_floor();
+      f1.set_capacity(4);
+      f1.set_floor_no(1);
+      Parking_floor f2 = new Parking_floor();
+      f2.set_capacity(4);
+      f2.set_floor_no(2);
+      Parking_floor f3 = new Parking_floor();
+      f3.set_capacity(4);
+      f3.set_floor_no(3);
+      Vehicle v = new Vehicle("bike");
+      v.set_vehicle_fuel("NV");
+      v.set_vehicle_no("5456");
+
+      Person prathik = new Person("prathik",v,false);
+      /* For floor 1*/
+      Compact_Spot f1c1 = new Compact_Spot();
+      Large_Spot f1c2 = new Large_Spot();
+      Handicapped_Spot f1c3 = new Handicapped_Spot();
+      Bike_Spot f1c4 = new Bike_Spot();
+      /* For floor 2 */
+      Compact_Spot f2c1 = new Compact_Spot();
+      Large_Spot f2c2 = new Large_Spot();
+      Handicapped_Spot fc3 = new Handicapped_Spot();
+      Bike_Spot f2c4 = new Bike_Spot();
+      /* For floor 3 */
+      Compact_Spot f3c1 = new Compact_Spot();
+      Large_Spot f3c2 = new Large_Spot();
+      Handicapped_Spot f3c3 = new Handicapped_Spot();
+      Bike_Spot f3c4 = new Bike_Spot();
       
+      Parking_Attendant xyz = new Parking_Attendant("Roshan");
+      xyz.Welcome();
+      if(f1c4.Is_spot_free){
+          f1c4.assign_spot_to_vehicle(v,prathik);
+      }
+      else{
+          System.out.println("you cant park");
+      }
+      Ticket t1 = new Ticket(prathik,v,2,30);
+      f1c4.remove_vehicle_from_spot();
+      int money = t1.money_to_be_paid(4, 50);
+      Money m = new Money(money,"UPI");
+      t1.Transcation(money);
+      m.pay_money(money);
+      xyz.dept_msg();
+
     }
 }
     
